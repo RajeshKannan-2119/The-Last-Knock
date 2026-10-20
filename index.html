@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Last Knock — Whispers of the Blackwood</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="images/Node_01_Root_Stranded.png" type="image/png">
+</head>
+<body>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SCREEN: TITLE
+         ═══════════════════════════════════════════════════════ -->
+    <div id="screen-title" class="screen active">
+        <div class="title-bg" style="background-image: url('images/Title_Page.png');"></div>
+        <div class="title-content">
+            <h1 class="title-text" id="title-text">THE LAST KNOCK</h1>
+            <p class="title-subtitle" id="title-subtitle">Whispers of the Blackwood</p>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SCREEN: MAIN MENU
+         ═══════════════════════════════════════════════════════ -->
+    <div id="screen-menu" class="screen">
+        <div class="menu-bg" style="background-image: url('images/Title_Page.png');"></div>
+        <div class="menu-container">
+            <h1 class="menu-title">THE LAST KNOCK</h1>
+            <p class="menu-subtitle">Whispers of the Blackwood</p>
+            <nav class="menu-buttons">
+                <button class="menu-btn disabled" id="btn-continue" disabled>
+                    <span class="btn-icon">▶</span> Continue
+                </button>
+                <button class="menu-btn" id="btn-newgame">
+                    <span class="btn-icon">✦</span> New Game
+                </button>
+                <button class="menu-btn" id="btn-loadgame">
+                    <span class="btn-icon">📂</span> Load Game
+                </button>
+                <button class="menu-btn" id="btn-storypath-menu">
+                    <span class="btn-icon">🗺</span> Story Path
+                </button>
+                <button class="menu-btn" id="btn-quit">
+                    <span class="btn-icon">✕</span> Quit Game
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SCREEN: GAME
+         ═══════════════════════════════════════════════════════ -->
+    <div id="screen-game" class="screen">
+        <!-- Scene background image.
+             The artwork has a choice panel baked into its bottom ~21%, so the image
+             sits in a crop box (.scene-crop) that cuts that strip off. -->
+        <div class="scene-container">
+            <div class="scene-crop">
+                <img id="scene-image" class="scene-image" src="" alt="Scene">
+            </div>
+        </div>
+
+        <!-- HUD — in-game controls (top right) -->
+        <div class="game-hud" id="game-hud">
+            <button class="hud-btn" id="hud-pause" title="Pause">⏸</button>
+            <button class="hud-btn" id="hud-save" title="Save">💾</button>
+            <button class="hud-btn" id="hud-load" title="Load">📂</button>
+            <button class="hud-btn" id="hud-map" title="Story Path">🗺</button>
+            <button class="hud-btn" id="hud-quit" title="Quit">✕</button>
+        </div>
+
+        <!-- Story dock (bottom): text, continue prompt, choices, ending, timer -->
+        <div class="story-overlay" id="story-overlay">
+            <div class="story-text" id="story-text"></div>
+
+            <!-- "Continue reading" prompt for story nodes before choices appear -->
+            <div class="continue-prompt" id="continue-prompt" style="display: none;">
+                <button class="continue-btn" id="btn-continue-story">Click to continue...</button>
+            </div>
+
+            <!-- Decision choices -->
+            <div class="choices-container" id="choices-container" style="display: none;">
+                <button class="choice-btn left" id="choice-left">
+                    <span class="choice-label">[ LEFT ]</span>
+                    <span class="choice-text" id="choice-left-text"></span>
+                </button>
+                <button class="choice-btn right" id="choice-right">
+                    <span class="choice-label">[ RIGHT ]</span>
+                    <span class="choice-text" id="choice-right-text"></span>
+                </button>
+            </div>
+
+            <!-- Ending display (when reaching a leaf) -->
+            <div class="ending-display" id="ending-display" style="display: none;">
+                <div class="ending-title" id="ending-title"></div>
+                <div class="ending-type" id="ending-type"></div>
+            </div>
+
+            <!-- Timer: the bar fill and the runner are both driven by --p (0 → 1) -->
+            <div class="timer-container" id="timer-container" style="display: none;">
+                <div class="timer-bar">
+                    <div class="timer-progress" id="timer-progress"></div>
+                    <div class="timer-runner" id="timer-runner" aria-hidden="true">
+                        <svg viewBox="0 0 40 50" width="30" height="38" xmlns="http://www.w3.org/2000/svg">
+                            <g class="rn-body">
+                                <!-- far arm + far leg (drawn dimmer, behind) -->
+                                <g class="rn-limb rn-far">
+                                    <g class="rn-arm rn-arm-b"><line x1="21" y1="17" x2="21" y2="25"/><g class="rn-forearm rn-forearm-b"><line x1="21" y1="25" x2="21" y2="32"/></g></g>
+                                    <g class="rn-thigh rn-thigh-b"><line x1="16" y1="29" x2="16" y2="38"/><g class="rn-shin rn-shin-b"><line x1="16" y1="38" x2="16" y2="47"/></g></g>
+                                </g>
+                                <line class="rn-torso" x1="16" y1="29" x2="22" y2="15"/>
+                                <circle class="rn-head" cx="25" cy="9" r="5"/>
+                                <!-- near arm + near leg -->
+                                <g class="rn-limb">
+                                    <g class="rn-arm rn-arm-a"><line x1="21" y1="17" x2="21" y2="25"/><g class="rn-forearm rn-forearm-a"><line x1="21" y1="25" x2="21" y2="32"/></g></g>
+                                    <g class="rn-thigh rn-thigh-a"><line x1="16" y1="29" x2="16" y2="38"/><g class="rn-shin rn-shin-a"><line x1="16" y1="38" x2="16" y2="47"/></g></g>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+                <div class="timer-seconds" id="timer-seconds">10</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SCREEN: GAME OVER
+         ═══════════════════════════════════════════════════════ -->
+    <div id="screen-gameover" class="screen">
+        <div class="gameover-container">
+            <img class="gameover-image" id="gameover-image" src="" alt="Ending Scene">
+            <div class="gameover-content">
+                <h1 class="gameover-title">GAME OVER</h1>
+                <p class="gameover-ending" id="gameover-ending"></p>
+                <p class="gameover-type" id="gameover-type"></p>
+                <button class="menu-btn gameover-btn" id="btn-gameover-menu">
+                    <span class="btn-icon">↩</span> Return to Main Menu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         OVERLAY: SAVE
+         ═══════════════════════════════════════════════════════ -->
+    <div id="overlay-save" class="overlay">
+        <div class="overlay-content">
+            <h2 class="overlay-title">💾 Save Game</h2>
+            <p class="overlay-hint">Select a slot to save your progress</p>
+            <div class="slot-grid" id="save-slot-grid">
+                <!-- Slot cards generated by JS -->
+            </div>
+            <button class="overlay-close-btn" id="save-close">✕ Close</button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         OVERLAY: LOAD
+         ═══════════════════════════════════════════════════════ -->
+    <div id="overlay-load" class="overlay">
+        <div class="overlay-content">
+            <h2 class="overlay-title">📂 Load Game</h2>
+            <p class="overlay-hint">Select a save to load</p>
+            <div class="slot-grid" id="load-slot-grid">
+                <!-- Slot cards generated by JS -->
+            </div>
+            <button class="overlay-close-btn" id="load-close">✕ Close</button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         OVERLAY: STORY PATH
+         ═══════════════════════════════════════════════════════ -->
+    <div id="overlay-storypath" class="overlay storypath">
+        <div class="overlay-content storypath-content">
+            <h2 class="overlay-title">🗺 Story Path</h2>
+            <div id="storypath-tree"></div>
+            <button class="overlay-close-btn" id="storypath-close">✕ Close</button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         OVERLAY: PAUSE
+         ═══════════════════════════════════════════════════════ -->
+    <div id="overlay-pause" class="overlay pause">
+        <div class="overlay-content pause-content">
+            <h2 class="pause-title">⏸ PAUSED</h2>
+            <button class="menu-btn" id="btn-resume">
+                <span class="btn-icon">▶</span> Resume
+            </button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         OVERLAY: QUIT CONFIRMATION
+         ═══════════════════════════════════════════════════════ -->
+    <div id="overlay-quit-confirm" class="overlay quit-confirm">
+        <div class="overlay-content quit-content">
+            <h2 class="overlay-title">Quit to Menu?</h2>
+            <p class="overlay-hint">Unsaved progress will be lost.</p>
+            <div class="quit-buttons">
+                <button class="menu-btn quit-yes" id="btn-quit-yes">Yes, Quit</button>
+                <button class="menu-btn quit-no" id="btn-quit-no">No, Stay</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SCRIPTS (load order matters)
+         ═══════════════════════════════════════════════════════ -->
+    <script src="js/tree.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/storypath.js"></script>
+    <script src="js/game.js"></script>
+
+</body>
+</html>
