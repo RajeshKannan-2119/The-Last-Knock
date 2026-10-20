@@ -1,0 +1,1302 @@
+/* ============================================================
+   THE LAST KNOCK — Master Stylesheet
+   A browser-based horror story game with dark cinematic aesthetic.
+   ============================================================ */
+
+/* ---------- Google Fonts ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Merriweather:wght@300;400;700&display=swap');
+
+/* ---------- CSS Custom Properties ---------- */
+:root {
+  --bg-dark:       #0a0a0a;
+  --bg-card:       #141414;
+  --bg-overlay:    rgba(0, 0, 0, 0.85);
+  --accent-gold:   #c4a35a;
+  --accent-gold-dim: rgba(196, 163, 90, 0.35);
+  --accent-red:    #8b0000;
+  --accent-red-bright: #c0392b;
+  --accent-green:  #1a5c1a;
+  --accent-green-bright: #27ae60;
+  --text-primary:  #e8e0d0;
+  --text-secondary:#9a9080;
+  --text-dim:      #5a5248;
+  --font-title:    'Creepster', cursive;
+  --font-body:     'Crimson Text', 'Merriweather', Georgia, serif;
+  --font-ui:       -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --transition-fast: 0.2s ease;
+  --transition-med:  0.4s ease;
+  --transition-slow: 0.8s ease;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+}
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Custom Scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--text-dim);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* ---------- Screen System ---------- */
+.screen {
+  display: none;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition-slow);
+  z-index: 1;
+}
+.screen.active {
+  display: flex;
+  opacity: 1;
+  animation: screenFade 0.8s ease forwards;
+}
+
+/* ============================================================
+   1. TITLE SCREEN
+   ============================================================ */
+#screen-title {
+  background: #000;
+}
+
+.title-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(0.5) saturate(0.7);
+}
+
+.title-text {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-title);
+  font-size: clamp(3rem, 10vw, 7rem);
+  color: var(--accent-gold);
+  text-align: center;
+  text-shadow:
+    0 0 20px rgba(196, 163, 90, 0.6),
+    0 0 60px rgba(196, 163, 90, 0.3),
+    0 4px 8px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.12em;
+  opacity: 0;
+  animation: titleFadeIn 2s ease 0.5s forwards,
+             titleFadeOut 1.5s ease 4.5s forwards;
+}
+
+.title-subtitle {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: 0.8rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: titleFadeIn 2s ease 1.2s forwards,
+             titleFadeOut 1.5s ease 4.5s forwards;
+}
+
+/* ============================================================
+   2. MAIN MENU
+   ============================================================ */
+#screen-menu {
+  background:
+    radial-gradient(ellipse at center bottom, rgba(30, 20, 10, 0.7) 0%, transparent 60%),
+    linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.9) 100%);
+  background-color: var(--bg-dark);
+}
+
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.menu-title {
+  font-family: var(--font-title);
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  color: var(--accent-gold);
+  text-shadow:
+    0 0 15px rgba(196, 163, 90, 0.5),
+    0 3px 6px rgba(0, 0, 0, 0.7);
+  letter-spacing: 0.1em;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.menu-btn {
+  display: block;
+  width: 260px;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, rgba(40,35,28,0.9), rgba(25,22,18,0.95));
+  border: 1px solid var(--accent-gold-dim);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+}
+
+.menu-btn:hover {
+  background: linear-gradient(135deg, rgba(60,50,35,0.95), rgba(35,30,22,0.98));
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 18px rgba(196, 163, 90, 0.25), inset 0 0 12px rgba(196, 163, 90, 0.08);
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+.menu-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 0 8px rgba(196, 163, 90, 0.15);
+}
+
+.menu-btn.disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+  border-color: transparent;
+}
+
+/* ============================================================
+   3. GAME SCREEN
+   ============================================================ */
+#screen-game {
+  flex-direction: column;
+  justify-content: flex-end;
+  background: #000;
+}
+
+/* --- Scene ---
+   Every scene PNG has a choice panel baked into its bottom ~21%. The real UI
+   draws its own choices, so the image lives in a crop box that keeps only the
+   top 79% of the artwork (--scene-ar = 2752 / (1536 * 0.79)) and is scaled
+   "cover"-style to fill the screen. */
+.scene-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: size;
+  --scene-ar: 2.268;
+}
+
+.scene-crop {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* fallback for browsers without container query units */
+  width: max(100vw, calc(100vh * var(--scene-ar)));
+  width: max(100cqw, calc(100cqh * var(--scene-ar)));
+  aspect-ratio: var(--scene-ar);
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}
+
+.scene-image {
+  display: block;
+  width: 100%;
+  height: auto;          /* natural ratio => bottom strip falls outside .scene-crop */
+  max-width: none;
+  transition: opacity var(--transition-slow);
+}
+
+/* --- Story Overlay (bottom dock: text, continue prompt, choices, timer) --- */
+.story-overlay {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  padding: clamp(2.5rem, 9vh, 6rem) 2rem 1.2rem;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.55) 22%,
+    rgba(0, 0, 0, 0.85) 55%,
+    rgba(0, 0, 0, 0.95) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.story-text {
+  max-width: 720px;
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
+  color: var(--text-primary);
+  line-height: 1.75;
+  text-align: center;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+  margin-bottom: 1.5rem;
+  animation: textAppear 0.6s ease forwards;
+}
+
+/* --- Choices --- */
+.choices-container {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  width: 100%;
+  max-width: 720px;
+  margin-bottom: 0.5rem;
+}
+
+.choice-btn {
+  flex: 1;
+  max-width: 340px;
+  padding: 0.9rem 1.2rem;
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: rgba(20, 18, 14, 0.85);
+  border: 1px solid var(--accent-gold-dim);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+  animation: pulse 2.5s ease-in-out infinite;
+}
+
+.choice-btn:hover {
+  border-color: var(--accent-gold);
+  background: rgba(40, 34, 24, 0.92);
+  box-shadow: 0 0 22px rgba(196, 163, 90, 0.3), inset 0 0 10px rgba(196, 163, 90, 0.06);
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+.choice-btn:active {
+  transform: translateY(0);
+}
+
+/* ============================================================
+   TIMER BAR + RUNNER
+   One variable, --p (0 → 1, set from game.js every frame), drives the
+   fill, the runner position and the colour, so they can never drift apart.
+   ============================================================ */
+.timer-container {
+  --p: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: 720px;
+  margin: 0.4rem auto 0;
+  padding: 0 1.2rem;
+}
+
+.timer-bar {
+  position: relative;
+  width: 100%;
+  height: 10px;
+  margin-top: 40px;                 /* room for the runner standing on the bar */
+  background: rgba(255, 255, 255, 0.10);
+  border-radius: 5px;
+}
+
+/* the doom at the end of the bar */
+.timer-bar::after {
+  content: '';
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-red) 0%, rgba(139, 0, 0, 0) 70%);
+  animation: doomPulse 1.4s ease-in-out infinite;
+}
+
+.timer-progress {
+  position: absolute;
+  inset: 0;
+  border-radius: 5px;
+  background: linear-gradient(90deg, var(--accent-gold), var(--accent-red));
+  box-shadow: 0 0 8px rgba(196, 163, 90, 0.4);
+  /* reveal the first --p of the bar, left to right */
+  clip-path: inset(0 calc((1 - var(--p)) * 100%) 0 0 round 5px);
+}
+
+.timer-runner {
+  position: absolute;
+  left: calc(var(--p) * 100%);
+  bottom: 3px;                      /* feet on the bar */
+  width: 30px;
+  height: 38px;
+  transform: translateX(-50%);
+  color: var(--accent-gold);
+  filter: drop-shadow(0 0 4px rgba(196, 163, 90, 0.6));
+  z-index: 2;
+  pointer-events: none;
+}
+
+.timer-runner svg {
+  display: block;
+  overflow: visible;
+}
+
+/* --- Stick-figure runner (faces right, runs along the bar) --- */
+.timer-runner line,
+.timer-runner circle {
+  stroke: currentColor;
+  stroke-width: 3.2;
+  stroke-linecap: round;
+}
+.timer-runner circle { fill: currentColor; stroke: none; }
+.timer-runner .rn-far line { opacity: 0.55; }
+
+.timer-runner .rn-body,
+.timer-runner .rn-arm,
+.timer-runner .rn-forearm,
+.timer-runner .rn-thigh,
+.timer-runner .rn-shin {
+  transform-box: view-box;
+}
+
+.rn-body    { animation: rnBob 0.36s ease-in-out infinite; }
+
+.rn-thigh   { transform-origin: 16px 29px; animation: rnThigh 0.72s ease-in-out infinite; }
+.rn-shin    { transform-origin: 16px 38px; animation: rnShin 0.72s ease-in-out infinite; }
+.rn-arm     { transform-origin: 21px 17px; animation: rnArm 0.72s ease-in-out infinite; }
+.rn-forearm { transform-origin: 21px 25px; animation: rnForearm 0.72s ease-in-out infinite; }
+
+/* the far limbs run half a stride behind the near ones */
+.rn-thigh-b, .rn-shin-b, .rn-arm-b, .rn-forearm-b { animation-delay: -0.36s; }
+/* arms swing opposite to the legs on the same side */
+.rn-arm-a, .rn-forearm-a { animation-delay: -0.36s; }
+.rn-arm-b, .rn-forearm-b { animation-delay: 0s; }
+
+.timer-container.paused .timer-runner *,
+.timer-container.paused .timer-bar::after {
+  animation-play-state: paused;
+}
+
+/* Last 3 seconds: everything goes red and the counter shakes */
+.timer-container.urgent .timer-runner { color: #ff6b6b; filter: drop-shadow(0 0 5px rgba(255, 60, 60, 0.8)); }
+.timer-container.urgent .timer-seconds { color: #ff6b6b; animation: timerShake 0.3s linear infinite; }
+.timer-container.urgent .rn-thigh,
+.timer-container.urgent .rn-shin,
+.timer-container.urgent .rn-arm,
+.timer-container.urgent .rn-forearm { animation-duration: 0.5s; }
+.timer-container.urgent .rn-thigh-b, .timer-container.urgent .rn-shin-b,
+.timer-container.urgent .rn-arm-a,   .timer-container.urgent .rn-forearm-a { animation-delay: -0.25s; }
+.timer-container.urgent .rn-arm-b,   .timer-container.urgent .rn-forearm-b,
+.timer-container.urgent .rn-thigh-a, .timer-container.urgent .rn-shin-a { animation-delay: 0s; }
+
+@keyframes rnBob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-2px); }
+}
+@keyframes rnThigh {
+  0%   { transform: rotate(-45deg); }   /* leg forward */
+  50%  { transform: rotate(40deg); }    /* leg back    */
+  100% { transform: rotate(-45deg); }
+}
+@keyframes rnShin {
+  0%   { transform: rotate(5deg); }
+  25%  { transform: rotate(10deg); }
+  50%  { transform: rotate(75deg); }    /* knee folds while the leg swings forward */
+  75%  { transform: rotate(35deg); }
+  100% { transform: rotate(5deg); }
+}
+@keyframes rnArm {
+  0%   { transform: rotate(40deg); }
+  50%  { transform: rotate(-50deg); }
+  100% { transform: rotate(40deg); }
+}
+@keyframes rnForearm {
+  0%   { transform: rotate(-60deg); }
+  50%  { transform: rotate(-90deg); }
+  100% { transform: rotate(-60deg); }
+}
+@keyframes doomPulse {
+  0%, 100% { opacity: 0.55; transform: scale(0.9); }
+  50%      { opacity: 1;    transform: scale(1.25); }
+}
+@keyframes timerShake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-2px); }
+  75%      { transform: translateX(2px); }
+}
+
+/* ============================================================
+   HUD (In-game Controls)
+   ============================================================ */
+.game-hud {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 20;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.hud-btn {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  background: rgba(10, 10, 10, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.hud-btn:hover {
+  background: rgba(20, 18, 14, 0.8);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  box-shadow: 0 0 12px rgba(196, 163, 90, 0.25);
+  transform: scale(1.1);
+}
+
+/* ============================================================
+   OVERLAY BASE
+   ============================================================ */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: var(--bg-overlay);
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity var(--transition-med);
+}
+
+.overlay.active {
+  display: flex;
+  opacity: 1;
+  animation: screenFade 0.4s ease forwards;
+}
+
+.overlay-content {
+  background: linear-gradient(160deg, #1a1814, #0f0d0a);
+  border: 1px solid var(--accent-gold-dim);
+  border-radius: var(--radius-lg);
+  padding: 2rem 2.5rem;
+  max-width: 560px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(196, 163, 90, 0.08);
+}
+
+.overlay-title {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  color: var(--accent-gold);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 10px rgba(196, 163, 90, 0.4);
+  letter-spacing: 0.08em;
+}
+
+/* close / back button inside overlays */
+.overlay-close {
+  display: block;
+  margin: 1.5rem auto 0;
+  padding: 0.6rem 2rem;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  background: rgba(30, 26, 20, 0.9);
+  border: 1px solid var(--accent-gold-dim);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.overlay-close:hover {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 14px rgba(196, 163, 90, 0.2);
+}
+
+/* ============================================================
+   SAVE / LOAD OVERLAYS
+   ============================================================ */
+.slot-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.slot-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.slot-card:hover {
+  background: rgba(196, 163, 90, 0.06);
+  border-color: var(--accent-gold-dim);
+  box-shadow: 0 0 14px rgba(196, 163, 90, 0.1);
+}
+
+.slot-card.empty {
+  opacity: 0.45;
+  border-style: dashed;
+}
+
+.slot-card.empty:hover {
+  opacity: 0.7;
+}
+
+.slot-card.autosave {
+  border-color: rgba(196, 163, 90, 0.25);
+  background: rgba(196, 163, 90, 0.04);
+}
+
+.slot-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  padding: 0.25rem 0.6rem;
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: var(--radius-sm);
+  color: var(--bg-dark);
+  background: var(--accent-gold);
+  flex-shrink: 0;
+}
+
+.slot-card.autosave .slot-badge {
+  background: var(--accent-red-bright);
+  color: #fff;
+}
+
+.slot-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  overflow: hidden;
+}
+
+.slot-info strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.slot-info small {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+/* ============================================================
+   STORY PATH OVERLAY
+   ============================================================ */
+.overlay.storypath .overlay-content {
+  max-width: 90vw;
+  max-height: 85vh;
+  overflow: auto;
+}
+
+#storypath-tree {
+  width: 100%;
+  min-height: 300px;
+  padding: 1rem 0;
+}
+
+/* ============================================================
+   PAUSE OVERLAY
+   ============================================================ */
+.overlay.pause {
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pause-title {
+  font-family: var(--font-title);
+  font-size: clamp(3rem, 8vw, 5rem);
+  color: var(--accent-gold);
+  text-shadow: 0 0 20px rgba(196, 163, 90, 0.5);
+  letter-spacing: 0.15em;
+}
+
+.pause-btn {
+  padding: 0.8rem 3rem;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-primary);
+  background: rgba(30, 26, 20, 0.9);
+  border: 1px solid var(--accent-gold-dim);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.pause-btn:hover {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 18px rgba(196, 163, 90, 0.25);
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   QUIT CONFIRMATION OVERLAY
+   ============================================================ */
+.overlay.quit-confirm .overlay-content {
+  max-width: 380px;
+  text-align: center;
+}
+
+.quit-text {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+
+.quit-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.quit-btn {
+  padding: 0.65rem 2rem;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: 1px solid transparent;
+}
+
+.quit-btn.confirm {
+  color: #fff;
+  background: var(--accent-red);
+  border-color: var(--accent-red-bright);
+}
+
+.quit-btn.confirm:hover {
+  background: var(--accent-red-bright);
+  box-shadow: 0 0 16px rgba(192, 57, 43, 0.35);
+}
+
+.quit-btn.cancel {
+  color: var(--text-primary);
+  background: rgba(30, 26, 20, 0.9);
+  border-color: var(--accent-gold-dim);
+}
+
+.quit-btn.cancel:hover {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 14px rgba(196, 163, 90, 0.2);
+}
+
+/* ============================================================
+   4. GAME OVER SCREEN
+   ============================================================ */
+#screen-gameover {
+  background: #000;
+}
+
+.gameover-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  max-width: 640px;
+  width: 100%;
+  z-index: 2;
+}
+
+.gameover-image {
+  width: 100%;
+  max-height: 40vh;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--accent-gold-dim);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.7);
+}
+
+.gameover-title {
+  font-family: var(--font-title);
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  color: var(--accent-red-bright);
+  text-shadow:
+    0 0 20px rgba(192, 57, 43, 0.6),
+    0 0 50px rgba(139, 0, 0, 0.3),
+    0 4px 8px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.12em;
+  margin-bottom: 0.5rem;
+}
+
+.gameover-ending {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+}
+
+.gameover-type {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 0.3rem 1rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 2rem;
+  display: inline-block;
+}
+
+.gameover-type.bad {
+  color: #ff6b6b;
+  background: rgba(139, 0, 0, 0.25);
+  border: 1px solid rgba(139, 0, 0, 0.5);
+}
+
+.gameover-type.survival {
+  color: var(--accent-green-bright);
+  background: rgba(26, 92, 26, 0.25);
+  border: 1px solid rgba(26, 92, 26, 0.5);
+}
+
+.gameover-btn {
+  padding: 0.85rem 2.5rem;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, rgba(40, 35, 28, 0.9), rgba(25, 22, 18, 0.95));
+  border: 1px solid var(--accent-gold-dim);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.gameover-btn:hover {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 18px rgba(196, 163, 90, 0.25);
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+/* ============================================================
+   KEYFRAME ANIMATIONS
+   ============================================================ */
+@keyframes titleFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes titleFadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes textAppear {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes runnerMove {
+  from { left: 0; }
+  to   { left: calc(100% - 30px); }
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(196, 163, 90, 0); }
+  50%      { box-shadow: 0 0 14px rgba(196, 163, 90, 0.15); }
+}
+
+@keyframes screenFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ============================================================
+   RESPONSIVE — MOBILE
+   ============================================================ */
+@media (max-width: 600px) {
+  .choices-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .choice-btn {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .story-overlay {
+    padding: 4rem 1.2rem 1rem;
+  }
+
+  .overlay-content {
+    padding: 1.5rem 1.2rem;
+    width: 95%;
+  }
+
+  .menu-btn {
+    width: 220px;
+  }
+
+  .game-hud {
+    top: 0.5rem;
+    right: 0.5rem;
+    gap: 0.35rem;
+  }
+
+  .hud-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
+  }
+
+  .quit-actions {
+    flex-direction: column;
+  }
+
+  .gameover-image {
+    max-height: 30vh;
+  }
+
+  .storypath-content {
+    max-width: 95vw !important;
+  }
+}
+
+/* ============================================================
+   ADDITIONAL COMPONENT STYLES
+   ============================================================ */
+
+/* --- Menu Background Image --- */
+.menu-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(0.25) saturate(0.5) blur(2px);
+  z-index: 0;
+}
+
+.menu-subtitle {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-dim);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.menu-container {
+  position: relative;
+  z-index: 1;
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  align-items: center;
+}
+
+.btn-icon {
+  margin-right: 0.4rem;
+}
+
+/* --- Overlay Close Button --- */
+.overlay-close-btn {
+  display: block;
+  margin: 1.5rem auto 0;
+  padding: 0.6rem 2rem;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  background: rgba(30, 26, 20, 0.9);
+  border: 1px solid var(--accent-gold-dim);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.overlay-close-btn:hover {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 14px rgba(196, 163, 90, 0.2);
+  color: #fff;
+}
+
+/* --- Overlay hint text --- */
+.overlay-hint {
+  text-align: center;
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 1.2rem;
+}
+
+/* --- Continue Prompt --- */
+.continue-prompt {
+  position: relative;
+  z-index: 6;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.continue-btn {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: var(--accent-gold);
+  background: none;
+  border: none;
+  cursor: pointer;
+  animation: pulse 2s ease-in-out infinite;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 8px rgba(196, 163, 90, 0.4);
+  padding: 0.5rem 1rem;
+  transition: color var(--transition-fast);
+}
+
+.continue-btn:hover {
+  color: #fff;
+  text-shadow: 0 0 16px rgba(196, 163, 90, 0.6);
+}
+
+/* --- Choice Labels --- */
+.choice-label {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.35rem;
+}
+
+.choice-text {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+/* --- Ending Display (in-game) --- */
+.ending-display {
+  text-align: center;
+  margin-top: 1rem;
+  animation: textAppear 0.8s ease forwards;
+}
+
+.ending-title {
+  font-family: var(--font-title);
+  font-size: 1.8rem;
+  color: var(--accent-gold);
+  text-shadow: 0 0 12px rgba(196, 163, 90, 0.4);
+  margin-bottom: 0.5rem;
+}
+
+.ending-type {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.3rem 1rem;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+}
+
+.ending-type.bad {
+  color: #ff6b6b;
+  background: rgba(139, 0, 0, 0.3);
+}
+
+.ending-type.survival {
+  color: var(--accent-green-bright);
+  background: rgba(26, 92, 26, 0.3);
+}
+
+/* --- Scene Transition --- */
+.scene-transition .scene-image {
+  opacity: 0.3;
+}
+
+/* --- Notification Toast --- */
+.notification-toast {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  z-index: 100;
+  padding: 0.7rem 1.5rem;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: rgba(20, 18, 14, 0.95);
+  border: 1px solid var(--accent-gold);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(196, 163, 90, 0.15);
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+
+.notification-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* --- Slot Card Sub-elements --- */
+.slot-empty-text {
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.slot-node-title {
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.slot-time {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.slot-playtime {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+.slot-card.disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* --- Quit Buttons Layout --- */
+.quit-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.quit-yes {
+  background: var(--accent-red) !important;
+  border-color: var(--accent-red-bright) !important;
+}
+
+.quit-yes:hover {
+  background: var(--accent-red-bright) !important;
+  box-shadow: 0 0 16px rgba(192, 57, 43, 0.35) !important;
+}
+
+.quit-no:hover {
+  border-color: var(--accent-gold);
+}
+
+/* --- Quit Content --- */
+.quit-content {
+  max-width: 380px !important;
+  text-align: center;
+}
+
+/* --- Pause Content --- */
+.pause-content {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* --- Story Path Overlay Content (wider) --- */
+.storypath-content {
+  max-width: 1100px !important;
+  width: 95% !important;
+}
+
+/* --- Title Content (centered) --- */
+.title-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Timer seconds display --- */
+.timer-seconds {
+  text-align: center;
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  margin-top: 0.3rem;
+  letter-spacing: 0.1em;
+}
+
+
+/* ============================================================
+   STORY PATH — full-page, centred, Close button always reachable
+   ============================================================ */
+.overlay.storypath {
+  background: #0d0d0d;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.overlay.storypath .overlay-content {
+  max-width: none !important;
+  max-height: none !important;
+  width: 100% !important;
+  height: 100%;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+/* the heading is drawn inside the tree itself ("Story Path — x / 15 discovered") */
+.overlay.storypath .overlay-title { display: none; }
+
+/* sits above the full-screen tree (which has z-index 9000) */
+#storypath-close {
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  z-index: 9100;
+  margin: 0;
+}
+
+/* ============================================================
+   GAME OVER — crop the baked-in panel, keep everything centred
+   ============================================================ */
+.gameover-container {
+  max-width: 720px;
+}
+
+.gameover-image {
+  aspect-ratio: 2.268;            /* same crop as the in-game scene: top 79% of the art */
+  height: auto;
+  max-height: 42vh;
+  object-fit: cover;
+  object-position: center top;    /* the baked-in text panel falls off the bottom */
+}
+
+.gameover-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.gameover-title {
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  white-space: nowrap;
+}
+
+.gameover-btn {
+  white-space: nowrap;
+  align-self: center;
+  width: auto;
+  min-width: 260px;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
